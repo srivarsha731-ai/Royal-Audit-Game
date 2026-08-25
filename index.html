@@ -1,203 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The Royal Audit — Silappadikaram</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap');
-:root{
-  --ink:#2b1d12; --gold:#d6a84f; --cream:#fff8e8; --brown:#5b3822;
-  --red:#c83b32; --green:#2f8b57; --panel:#fffdf7;
-}
-*{box-sizing:border-box}
-body{margin:0;background:radial-gradient(circle at top,#5a351e 0,#24150e 72%);
-font-family:Nunito,system-ui,sans-serif;color:var(--ink);min-height:100vh}
-#app{max-width:520px;margin:auto;min-height:100vh;background:linear-gradient(#fff8e8,#f5dfb1);
-position:relative;overflow:hidden}
-.screen{display:none;min-height:100vh;padding:22px 18px 30px}
-.screen.active{display:flex;flex-direction:column}
-h1,h2,.title{font-family:Cinzel,serif}
-h1{font-size:34px;line-height:1.05;margin:8px 0;color:#fff}
-h2{font-size:25px;margin:8px 0}
-p{line-height:1.45}
-.hero{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;align-items:center;
-background:linear-gradient(160deg,#6b3c20,#2b1910);color:#fff8e8;border-radius:0 0 28px 28px;padding:28px 20px}
-.anklet{font-size:88px;filter:drop-shadow(0 8px 8px #0008);margin-bottom:10px}
-.subtitle{color:#f6d98b;font-weight:800;letter-spacing:.08em}
-.btn{border:0;border-radius:16px;padding:15px 20px;font:800 17px Nunito;cursor:pointer;margin-top:14px;
-box-shadow:0 5px 0 #7c5428;background:var(--gold);color:#29170d}
-.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #7c5428}
-.btn.secondary{background:#fff8e8;color:var(--brown);border:2px solid #d5ae63;box-shadow:none}
-.topbar{display:flex;justify-content:space-between;align-items:center;font-weight:800;color:#6b4326}
-.badge{background:#fff0c8;border:1px solid #e1bd72;border-radius:99px;padding:7px 11px}
-.scene{margin:12px 0;border:3px solid #d3a654;border-radius:24px;background:linear-gradient(145deg,#f9e9bd,#fffaf0);
-padding:18px;text-align:center;box-shadow:0 8px 20px #5a351e22}
-.sceneArt{font-size:72px;margin:4px 0 8px}
-.speech{background:#fff;border-radius:18px;padding:14px;text-align:left;border:2px solid #ead5a5;position:relative}
-.speech:before{content:"";position:absolute;left:24px;top:-10px;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:10px solid #ead5a5}
-.caseText{font-size:18px;font-weight:800}
-.prompt{text-align:center;font-weight:800;color:#6b4326;margin:10px 0 4px}
-.flags{display:flex;gap:12px;margin-top:auto}
-.flag{flex:1;min-height:125px;border:0;border-radius:22px;color:white;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;
-font:800 19px Nunito;box-shadow:0 8px 0 #0002;touch-action:none;user-select:none}
-.flag span{font-size:60px;line-height:1;margin-bottom:5px}
-.red{background:linear-gradient(145deg,#e14c42,#a82029)}
-.green{background:linear-gradient(145deg,#45aa70,#217047)}
-.flag.dragging{transform:scale(1.04) rotate(-2deg)}
-.feedback{display:none;margin-top:14px;padding:16px;border-radius:18px;background:#fff;border:2px solid #d6b66e}
-.feedback.show{display:block}
-.correct{color:var(--green);font-weight:900;font-size:22px}
-.wrong{color:var(--red);font-weight:900;font-size:22px}
-.clue{margin-top:10px;background:#2d2118;color:#fff3cf;border-radius:15px;padding:12px;font-size:14px}
-.finalCard{background:#fff;border:3px solid #d3a654;border-radius:24px;padding:20px;box-shadow:0 8px 20px #5a351e22}
-.score{font:800 56px Cinzel;color:#9a6418;text-align:center}
-.rank{text-align:center;font:800 23px Cinzel;color:#5b3822}
-.evidence{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.evidence span{background:#f6e8c2;border:1px solid #d9b66b;border-radius:99px;padding:7px 10px;font-size:13px}
-.verdict{margin-top:15px;padding:14px;border-radius:16px;background:#fff4d8;border:2px dashed #c99738}
-.small{font-size:13px;opacity:.8}
-.nameInput{width:100%;padding:15px;border:2px solid #d6b66e;border-radius:15px;font:700 17px Nunito;background:#fffdf7}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(100px);background:#2d2118;color:#fff4d4;padding:12px 18px;border-radius:99px;font-weight:800;transition:.3s;z-index:5}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.confetti{position:fixed;inset:0;pointer-events:none;z-index:4}
-.confetti i{position:absolute;width:8px;height:14px;animation:fall 1.2s linear forwards}
-@keyframes fall{to{transform:translateY(100vh) rotate(540deg);opacity:0}}
-</style>
-</head>
-<body>
-<div id="app">
-<section id="home" class="screen active">
-  <div class="hero">
-    <div class="anklet">💍</div>
-    <div class="subtitle">A SILAPPADIKARAM AUDIT ADVENTURE</div>
-    <h1>THE ROYAL<br>AUDIT</h1>
-    <p>Madurai has a case that went terribly wrong.<br><br><b>You are the Royal Auditor.</b><br>Find the red flags. Protect the truth.</p>
-    <button class="btn" onclick="show('brief')">ENTER THE CASE ⚖️</button>
-  </div>
-</section>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Nunito:wght@600;800&display=swap');
+*{box-sizing:border-box}body{margin:0;background:#1b100b;color:#2b1a10;font-family:Nunito,Arial,sans-serif}
+#game{max-width:520px;min-height:100vh;margin:auto;background:#f7e8bd;overflow:hidden;position:relative}.screen{display:none;min-height:100vh;padding:18px}.screen.on{display:flex;flex-direction:column}
+.title{font-family:Cinzel,serif}.gold{color:#d8ad50}button{font:800 17px Nunito;border:0;cursor:pointer}
+.primary{background:#d8ad50;color:#24160d;padding:15px 22px;border-radius:16px;box-shadow:0 5px #805b26}.primary:active{transform:translateY(3px);box-shadow:0 2px #805b26}
+.card{background:#fffaf0;border:2px solid #d5ae61;border-radius:22px;padding:18px;box-shadow:0 8px 20px #3d241522}
+.hero{min-height:100vh;background:radial-gradient(circle at 50% 20%,#714421,#2b170e 65%);color:#fff6df;text-align:center;align-items:center;justify-content:center}.hero .ring{font-size:88px}.hero h1{font-size:39px;line-height:1;margin:12px 0}.hero p{font-size:18px}
+input{width:100%;padding:14px;border-radius:14px;border:2px solid #d5ae61;font:800 16px Nunito;margin:12px 0;background:#fffdf7}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px}.pill{background:#fff4cf;border:1px solid #d4aa58;padding:7px 10px;border-radius:99px;font-weight:800}
+.map{background:linear-gradient(#e7c886,#d5ae63);border:3px solid #8a5b2b;border-radius:24px;padding:14px;min-height:430px;position:relative;overflow:hidden}.map:before{content:"";position:absolute;inset:0;opacity:.18;background-image:radial-gradient(#5d3519 1px,transparent 1px);background-size:18px 18px}
+.location{position:absolute;width:112px;min-height:88px;background:#fff8e8;border:3px solid #7b4d25;border-radius:18px;box-shadow:0 5px #7b4d2544;z-index:1;padding:8px}.location strong{display:block;font-size:13px}.location span{font-size:30px}
+.loc1{left:18px;top:28px}.loc2{right:18px;top:28px}.loc3{left:50%;transform:translateX(-50%);top:165px}.loc4{left:18px;bottom:24px}.loc5{right:18px;bottom:24px}.location.done{background:#dff1d7;border-color:#39744c}
+.line{position:absolute;background:#8b632e;height:5px;z-index:0;transform-origin:left}.l1{left:120px;top:75px;width:200px}.l2{left:280px;top:95px;width:105px;transform:rotate(62deg)}.l3{left:95px;top:260px;width:150px;transform:rotate(-24deg)}.l4{left:285px;top:260px;width:150px;transform:rotate(24deg)}
+.mission{text-align:center;margin:8px 0 14px}.case{background:#fffaf0;border:3px solid #c89743;border-radius:24px;padding:16px;text-align:center}.art{font-size:74px;margin:3px}.bubble{background:white;border:2px solid #dec68f;border-radius:18px;padding:14px;text-align:left;font-weight:800}
+.actions{display:flex;gap:12px;margin-top:14px}.flag{flex:1;color:#fff;padding:12px;border-radius:20px;min-height:118px;box-shadow:0 7px #0003}.flag b{display:block;font-size:19px}.flag .emoji{font-size:54px}.red{background:#c53d35}.green{background:#318957}
+.evidence{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.evi{background:#f3dfac;border:1px solid #c99d4e;border-radius:99px;padding:7px 9px;font-size:12px}.feedback{margin-top:12px}.good{color:#217148}.bad{color:#a62928}
+.progressbar{height:10px;background:#ead7aa;border-radius:99px;overflow:hidden;margin-top:6px}.progressbar i{display:block;height:100%;background:#d19d35;width:0;transition:.3s}
+.scorebig{text-align:center;font-family:Cinzel;font-size:58px;color:#9a6519}.rank{text-align:center;font:800 23px Cinzel}.verdict{background:#fff3d2;border:2px dashed #c49745;border-radius:17px;padding:14px;margin-top:14px}
+.awards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.award{background:#fff8e8;border:2px solid #d4ad5d;border-radius:15px;padding:12px;text-align:center}.award b{display:block}
+#toast{position:fixed;left:50%;bottom:18px;transform:translate(-50%,120px);background:#2a1a10;color:#fff3d4;padding:12px 17px;border-radius:99px;font-weight:800;transition:.25s;z-index:20}.show{transform:translate(-50%,0)!important}
+</style></head><body><div id="game">
 
-<section id="brief" class="screen">
-  <h2>🕵️ Your Mission</h2>
-  <div class="finalCard">
-    <p>The King has accepted an accusation against Kovalan. But an auditor cannot simply accept a claim.</p>
-    <p>Your job is to inspect each situation and decide:</p>
-    <p>🚩 <b>RED FLAG</b> — something requires investigation</p>
-    <p>🟢 <b>GREEN FLAG</b> — no audit concern based on the facts given</p>
-    <p><b>How to play:</b> Drag the correct flag onto the case. On a phone, you can also tap it.</p>
-  </div>
-  <input id="playerName" class="nameInput" placeholder="Enter your royal auditor name" maxlength="24">
-  <button class="btn" onclick="startGame()">START INVESTIGATION 🔎</button>
-</section>
+<section id="home" class="screen on hero"><div class="ring">💍</div><div class="gold"><b>A SILAPPADIKARAM AUDIT ADVENTURE</b></div><h1 class="title">THE ROYAL<br>AUDIT</h1><p>Madurai needs an auditor.<br><b>Investigate. Discover. Decide.</b></p><button class="primary" onclick="go('brief')">BEGIN THE ADVENTURE ⚖️</button></section>
 
-<section id="game" class="screen">
-  <div class="topbar">
-    <span id="caseNo">CASE 1 / 8</span><span class="badge">⭐ <span id="score">0</span></span>
-  </div>
-  <div class="scene">
-    <div id="sceneArt" class="sceneArt">👑</div>
-    <div class="speech"><div id="caseText" class="caseText"></div></div>
-  </div>
-  <div class="prompt">Drag your decision onto the case — or tap a flag.</div>
-  <div id="flags" class="flags">
-    <button class="flag red" data-choice="red"><span>🚩</span>RED FLAG</button>
-    <button class="flag green" data-choice="green"><span>🟢</span>GREEN FLAG</button>
-  </div>
-  <div id="feedback" class="feedback"></div>
-  <button id="nextBtn" class="btn" style="display:none" onclick="nextCase()">NEXT CASE →</button>
-</section>
+<section id="brief" class="screen"><h2 class="title">Your Mission</h2><div class="card"><p>The royal court has accepted a serious accusation against Kovalan.</p><p>You are the <b>Royal Auditor</b>. Travel through Madurai, inspect the evidence and identify what deserves further investigation.</p><p>🚩 <b>RED FLAG</b> = a matter of audit concern.</p><p>🟢 <b>GREEN FLAG</b> = no concern from the facts available.</p><p class="small">A red flag does not automatically mean fraud. It means: <b>look closer.</b></p></div><input id="name" placeholder="Your Royal Auditor name" maxlength="24"><button class="primary" onclick="start()">ENTER MADURAI 🏛️</button></section>
 
-<section id="final" class="screen">
-  <h2>🏆 CASE CLOSED</h2>
-  <div class="finalCard">
-    <div class="score"><span id="finalScore">0</span>/80</div>
-    <div id="rank" class="rank"></div>
-    <p id="finalMessage" style="text-align:center"></p>
-    <hr>
-    <h3>🔎 Audit Clues Collected</h3>
-    <div id="evidence" class="evidence"></div>
-    <div class="verdict">
-      <b>THE AUDIT LESSON</b><br><br>
-      A red flag does <b>not</b> prove fraud. It tells the auditor:
-      <b>“Look closer.”</b>
-    </div>
-    <button class="btn" onclick="location.reload()">PLAY AGAIN 🔄</button>
-  </div>
-</section>
-<div id="toast" class="toast"></div>
-<div id="confetti" class="confetti"></div>
-</div>
+<section id="map" class="screen"><div class="top"><b class="title">MADURAI — CASE MAP</b><span class="pill">⭐ <span id="score1">0</span> &nbsp;<span id="stars1">☆☆☆☆☆</span></span></div><div class="mission">Choose a location. Investigate every unlocked scene.</div><div class="map">
+<div class="line l1"></div><div class="line l2"></div><div class="line l3"></div><div class="line l4"></div>
+<button class="location loc1" id="l0" onclick="visit(0)"><span>🏪</span><strong>Goldsmith</strong><small>Evidence</small></button>
+<button class="location loc2" id="l1" onclick="visit(1)"><span>👑</span><strong>Royal Palace</strong><small>Authority</small></button>
+<button class="location loc3" id="l2" onclick="visit(2)"><span>💎</span><strong>Jewellery Chamber</strong><small>Inspect</small></button>
+<button class="location loc4" id="l3" onclick="visit(3)"><span>🏠</span><strong>Kannagi's House</strong><small>Testimony</small></button>
+<button class="location loc5" id="l4" onclick="visit(4)"><span>⚖️</span><strong>Royal Court</strong><small>Verdict</small></button><button class="location" style="left:calc(50% - 56px);top:300px" id="l5" onclick="visit(5)"><span>📜</span><strong>Palace Register</strong><small>Records</small></button>
+<button class="location" style="left:18px;bottom:135px" id="l6" onclick="visit(6)"><span>🗃️</span><strong>Records Room</strong><small>Documents</small></button>
+<button class="location" style="right:18px;bottom:135px" id="l7" onclick="visit(7)"><span>🔎</span><strong>Independent Check</strong><small>Corroborate</small></button></div>
+<div class="card" style="margin-top:14px"><b>Case progress</b><div id="progress">0 / 5 locations investigated</div><div class="progressbar"><i id="mapProgress"></i></div><p class="small">⭐ Stars are your <b>audit reputation</b>. Earn them by making correct decisions.</p></div></section>
+
+<section id="scene" class="screen"><div class="top"><button class="primary" style="padding:8px 12px;font-size:14px" onclick="go('map')">← MAP</button><span class="pill">⭐ <span id="score2">0</span> &nbsp;<span id="stars2">☆☆☆☆☆</span></span></div>
+<div class="case"><div class="art" id="sceneIcon">🔎</div><h2 id="sceneTitle" class="title"></h2><div id="sceneStory" class="bubble"></div><p class="muted"><b>What do you do?</b></p>
+<div class="actions"><button class="flag red" onclick="decide('red')"><span class="emoji">🚩</span><b>RED FLAG</b></button><button class="flag green" onclick="decide('green')"><span class="emoji">🟢</span><b>GREEN FLAG</b></button></div>
+<div id="feedback" class="feedback"></div><div class="evidence" id="evidence"></div><button id="continue" class="primary" style="display:none;width:100%" onclick="goAfterScene()">CONTINUE INVESTIGATION →</button></div></section>
+
+<section id="quiz" class="screen"><div class="top"><b class="title">ROYAL AUDIT — FINAL REVIEW</b><span class="pill">⭐ <span id="scoreQ">0</span></span></div><div class="card"><p><b>Before the final verdict, the court asks you to review two additional audit situations.</b></p><div class="progressbar"><i id="quizProgress"></i></div></div>
+<div class="case" style="margin-top:12px"><div class="art" id="qIcon">📜</div><h2 id="qTitle" class="title"></h2><div id="qStory" class="bubble"></div><div class="actions"><button class="flag red" onclick="answerExtra('red')"><span class="emoji">🚩</span><b>RED FLAG</b></button><button class="flag green" onclick="answerExtra('green')"><span class="emoji">🟢</span><b>GREEN FLAG</b></button></div><div id="qFeedback" class="feedback"></div><button id="qNext" class="primary" style="display:none;width:100%" onclick="nextExtra()">NEXT REVIEW →</button></div></section>
+
+<section id="end" class="screen"><h2 class="title">⚖️ THE ROYAL VERDICT</h2><div class="card"><div class="scorebig"><span id="finalScore">0</span >/100</div><div class="rank" id="rank"></div><p id="endText" style="text-align:center"></p>
+<div class="verdict"><b>📜 FINAL AUDIT CONCLUSION</b><p id="conclusion"></p></div><div class="awards"><div class="award">⭐ <b id="starAward">0 / 5</b><span>Audit Stars</span></div><div class="award">🔎 <b id="clueAward">0</b><span>Clues Found</span></div></div>
+<hr><h3>🔎 Evidence Board</h3><div class="evidence" id="board"></div><button class="primary" onclick="location.reload()" style="width:100%;margin-top:15px">PLAY AGAIN 🔄</button></div></section>
+</div><div id="toast">⭐ Audit reputation increased!</div>
 
 <script>
-const cases = [
- {art:"💰", text:"The royal goldsmith tells the King: “Kovalan stole the Queen’s anklet. I am certain!” The King accepts the accusation without examining the anklet or seeking other evidence.", answer:"red", concept:"Insufficient audit evidence", clue:"The accusation was not independently verified.", why:"An auditor should obtain sufficient and appropriate evidence before reaching a conclusion."},
- {art:"🔍", text:"The auditor physically examines the anklet and compares its contents with the Queen’s known anklet before making a conclusion.", answer:"green", concept:"Evidence verification", clue:"Physical inspection was performed.", why:"Directly inspecting relevant evidence is an appropriate way to test a claim."},
- {art:"👑", text:"The King tells the auditor: “Close this investigation immediately. I have already decided Kovalan is guilty.” The auditor is expected to follow the order.", answer:"red", concept:"Undue pressure / professional skepticism", clue:"The auditor is being pressured toward a predetermined conclusion.", why:"An auditor should remain objective and skeptical rather than simply accepting pressure from authority."},
- {art:"💎", text:"The goldsmith both maintains the palace jewellery records and is the person making the accusation. The auditor notices this before relying on his records.", answer:"red", concept:"Conflict of interest", clue:"The source of evidence has a role connected to the records being examined.", why:"A potential conflict can affect objectivity and should trigger further investigation."},
- {art:"📜", text:"The palace has dated records describing the Queen’s anklet, and the auditor compares those records with the physical item.", answer:"green", concept:"Corroborating evidence", clue:"Records are being compared with physical evidence.", why:"Independent or corroborating evidence can strengthen the basis for an audit conclusion."},
- {art:"⚖️", text:"Kannagi gives information that contradicts the goldsmith’s claim. The auditor investigates the contradiction instead of ignoring it.", answer:"green", concept:"Professional skepticism", clue:"Contradictory information was investigated.", why:"Considering contradictory evidence is an important part of a skeptical audit approach."},
- {art:"🚫", text:"There is no documentation showing when the Queen’s anklet was made, what it contained, or how it was identified. The King still wants the accusation accepted.", answer:"red", concept:"Documentation and evidence gap", clue:"Key supporting documentation is missing.", why:"Missing evidence increases uncertainty and should lead to additional audit procedures."},
- {art:"💎", text:"The auditor examines the anklet and finds that it contains rubies, while the Queen’s anklets are described as containing pearls. The auditor records the discrepancy.", answer:"green", concept:"Exception identified and documented", clue:"A physical discrepancy was identified and documented.", why:"Finding and documenting an exception is part of effective investigation; the discrepancy itself then requires evaluation."}
+const scenes=[
+{title:"The Goldsmith's Accusation",icon:"🏪",story:"The goldsmith tells the King that Kovalan stole the Queen's anklet. The King is ready to accept the accusation, but nobody has independently examined the anklet yet.",ans:"red",topic:"Insufficient evidence",clue:"A claim has been accepted without independent verification."},
+{title:"The King's Order",icon:"👑",story:"The King tells you: “I have already decided the case. Finish your investigation immediately.” You are expected to agree with his conclusion.",ans:"red",topic:"Undue influence",clue:"Authority is pressuring the auditor toward a predetermined conclusion."},
+{title:"The Jewellery Chamber",icon:"💎",story:"You compare the Queen's known anklet with the recovered anklet and physically inspect the contents instead of relying only on statements.",ans:"green",topic:"Evidence verification",clue:"Physical inspection provides direct evidence."},
+{title:"Kannagi's Testimony",icon:"🏠",story:"Kannagi gives information that conflicts with the goldsmith's story. You investigate the contradiction and record what you find.",ans:"green",topic:"Professional skepticism",clue:"Contradictory information is being investigated rather than ignored."},
+{title:"The Royal Court",icon:"⚖️",story:"You discover that the recovered anklet contains rubies while the Queen's anklets are described as containing pearls. The evidence conflicts with the original accusation.",ans:"red",topic:"Contradictory evidence",clue:"The physical evidence conflicts with the original claim."},
+{title:"The Palace Register",icon:"📜",story:"The palace register contains a dated entry about the Queen's anklet. You compare the record with the physical evidence before relying on it.",ans:"green",topic:"Corroborating evidence",clue:"A dated record is checked against independent physical evidence."},
+{title:"The Missing Inspection Note",icon:"🗃️",story:"The goldsmith says he inspected the anklet earlier, but there is no inspection note, date or supporting documentation. The King still wants his statement accepted.",ans:"red",topic:"Documentation gap",clue:"Important supporting documentation is missing."},
+{title:"The Independent Check",icon:"🔎",story:"A second trusted witness independently examines the anklet and records the result. The result agrees with the physical evidence you already collected.",ans:"green",topic:"Independent corroboration",clue:"Independent confirmation strengthens the reliability of the evidence."}
 ];
+const extras=[
+{title:"The Palace Register",icon:"📜",story:"The palace register has a dated entry for the Queen's anklet, and the auditor compares it with the physical anklet before relying on the record.",ans:"green",topic:"Corroborating evidence",clue:"A dated record is being checked against physical evidence."},
+{title:"The Missing Record",icon:"🗃️",story:"The goldsmith says he inspected the anklet earlier, but there is no inspection record, no date and no supporting documentation. The King still wants his statement accepted.",ans:"red",topic:"Documentation gap",clue:"Important supporting documentation is missing."}];
 
-let current=0, score=0, player="", answered=false, clues=[];
-
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
-function startGame(){
- player=document.getElementById('playerName').value.trim() || "Royal Auditor";
- current=0; score=0; clues=[]; show('game'); renderCase();
-}
-function renderCase(){
- answered=false;
- const c=cases[current];
- document.getElementById('caseNo').textContent=`CASE ${current+1} / ${cases.length}`;
- document.getElementById('score').textContent=score;
- document.getElementById('sceneArt').textContent=c.art;
- document.getElementById('caseText').textContent=c.text;
- document.getElementById('feedback').className='feedback';
- document.getElementById('feedback').innerHTML='';
- document.getElementById('nextBtn').style.display='none';
- document.querySelectorAll('.flag').forEach(b=>{b.disabled=false;b.classList.remove('dragging')});
-}
-function choose(choice){
- if(answered) return;
- answered=true;
- const c=cases[current], correct=choice===c.answer;
- if(correct){score+=10; clues.push({concept:c.concept,clue:c.clue}); celebrate();}
- const f=document.getElementById('feedback');
- f.className='feedback show';
- f.innerHTML=`<div class="${correct?'correct':'wrong'}">${correct?'🎯 CORRECT!':'❌ LOOK CLOSER!'}</div>
- <p><b>${c.answer==='red'?'🚩 RED FLAG':'🟢 GREEN FLAG'}</b> — ${c.concept}</p>
- <div class="clue">🔎 <b>Audit clue unlocked:</b><br>${c.clue}</div>
- <p>${c.why}</p>`;
- document.getElementById('score').textContent=score;
- document.querySelectorAll('.flag').forEach(b=>b.disabled=true);
- document.getElementById('nextBtn').style.display='block';
-}
-function nextCase(){current++; if(current<cases.length){renderCase()}else{showFinal()}}
-function showFinal(){
- document.getElementById('finalScore').textContent=score;
- let rank,msg;
- if(score>=70){rank="👑 CHIEF ROYAL AUDITOR";msg=`Excellent, ${player}! You showed strong professional skepticism and evidence-based thinking.`}
- else if(score>=50){rank="🔎 SENIOR ROYAL AUDITOR";msg=`Well done, ${player}! You spotted most of the important audit concerns.`}
- else if(score>=30){rank="📜 JUNIOR ROYAL AUDITOR";msg=`Good start, ${player}! Keep questioning the evidence before accepting a conclusion.`}
- else {rank="🪶 PALACE TRAINEE";msg=`The case is not over, ${player}. Remember: investigate before you conclude!`}
- document.getElementById('rank').textContent=rank;
- document.getElementById('finalMessage').textContent=msg;
- document.getElementById('evidence').innerHTML=clues.length?clues.map(x=>`<span>🔎 ${x.concept}</span>`).join(''):'<span>No clues unlocked — try again!</span>';
-}
-function celebrate(){
- const box=document.getElementById('confetti'); box.innerHTML='';
- for(let i=0;i<28;i++){let e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.top='-20px';e.style.background=['#d6a84f','#c83b32','#2f8b57','#7c5ac7'][i%4];e.style.animationDelay=Math.random()*.25+'s';box.appendChild(e)}
- setTimeout(()=>box.innerHTML='',1400);
-}
-document.querySelectorAll('.flag').forEach(btn=>{
- btn.addEventListener('click',()=>choose(btn.dataset.choice));
- btn.addEventListener('dragstart',e=>{btn.classList.add('dragging');e.dataTransfer.setData('choice',btn.dataset.choice)});
- btn.addEventListener('dragend',()=>btn.classList.remove('dragging'));
-});
-document.querySelector('.scene').addEventListener('dragover',e=>e.preventDefault());
-document.querySelector('.scene').addEventListener('drop',e=>{e.preventDefault();choose(e.dataTransfer.getData('choice'))});
-</script>
-</body>
-</html>
+let name="",score=0,stars=0,visited=new Set(),clues=[],current=-1,answered=false,extraIndex=0,extraAnswered=false;
+function go(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('on'));document.getElementById(id).classList.add('on')}
+function starDisplay(){return '★'.repeat(stars)+'☆'.repeat(5-stars)}
+function updateHUD(){document.getElementById('score1').textContent=score;document.getElementById('score2').textContent=score;document.getElementById('scoreQ').textContent=score;document.getElementById('stars1').textContent=starDisplay();document.getElementById('stars2').textContent=starDisplay()}
+function start(){name=document.getElementById('name').value.trim()||"Royal Auditor";go('map');updateMap();updateHUD()}
+function updateMap(){document.getElementById('progress').textContent=`${visited.size} / 8 locations investigated`;document.getElementById('mapProgress').style.width=(visited.size/8*100)+'%';for(let i=0;i<8;i++)document.getElementById('l'+i).classList.toggle('done',visited.has(i));updateHUD()}
+function visit(i){current=i;answered=false;const s=scenes[i];document.getElementById('sceneIcon').textContent=s.icon;document.getElementById('sceneTitle').textContent=s.title;document.getElementById('sceneStory').textContent=s.story;document.getElementById('feedback').innerHTML='';document.getElementById('evidence').innerHTML='';document.getElementById('continue').style.display='none';updateHUD();go('scene')}
+function decide(choice){if(answered)return;answered=true;const s=scenes[current],ok=choice===s.ans;if(ok){score+=10;if(stars<5)stars++;clues.push(s);toast("⭐ Correct! Audit reputation increased!")}document.getElementById('feedback').innerHTML=`<div class="${ok?'good':'bad'}"><b>${ok?'🎯 CORRECT DECISION!':'❌ NOT QUITE!'}</b></div><p><b>${s.ans==='red'?'🚩 RED FLAG':'🟢 GREEN FLAG'} — ${s.topic}</b></p><div class="card"><b>Audit clue:</b><br>${s.clue}</div>`;document.getElementById('evidence').innerHTML=clues.map(c=>`<span class="evi">🔎 ${c.topic}</span>`).join('');document.getElementById('continue').style.display='block';updateHUD()}
+function goAfterScene(){visited.add(current);updateMap();if(visited.size===8){extraIndex=0;loadExtra();go('quiz')}else go('map')}
+function loadExtra(){extraAnswered=false;const q=extras[extraIndex];document.getElementById('qIcon').textContent=q.icon;document.getElementById('qTitle').textContent=`Review ${extraIndex+1} of 2: ${q.title}`;document.getElementById('qStory').textContent=q.story;document.getElementById('qFeedback').innerHTML='';document.getElementById('qNext').style.display='none';document.getElementById('quizProgress').style.width=(extraIndex/2*100)+'%';updateHUD()}
+function answerExtra(choice){if(extraAnswered)return;extraAnswered=true;const q=extras[extraIndex],ok=choice===q.ans;if(ok){score+=10;if(stars<5)stars++;clues.push(q);toast("⭐ Correct! +10 points and audit reputation!")}document.getElementById('qFeedback').innerHTML=`<div class="${ok?'good':'bad'}"><b>${ok?'🎯 CORRECT!':'❌ LOOK CLOSER!'}</b></div><p><b>${q.ans==='red'?'🚩 RED FLAG':'🟢 GREEN FLAG'} — ${q.topic}</b></p><div class="card"><b>Audit clue:</b><br>${q.clue}</div>`;document.getElementById('qNext').style.display='block';updateHUD()}
+function nextExtra(){extraIndex++;if(extraIndex<extras.length)loadExtra();else showEnd()}
+function showEnd(){document.getElementById('finalScore').textContent=score;document.getElementById('starAward').textContent=`${stars} / 5`;document.getElementById('clueAward').textContent=clues.length;let rank,text,conclusion;
+if(stars>=5){rank="👑 CHIEF ROYAL AUDITOR";text=`Outstanding work, ${name}! Your audit reputation reached the highest level.`}
+else if(stars>=4){rank="🔎 SENIOR ROYAL AUDITOR";text=`Excellent work, ${name}! You showed strong professional skepticism.`}
+else if(stars>=2){rank="📜 JUNIOR ROYAL AUDITOR";text=`Good work, ${name}. You identified several important audit concerns.`}
+else{rank="🪶 PALACE TRAINEE";text=`Keep investigating, ${name}. An auditor must question evidence before concluding.`}
+if(stars>=5)conclusion="Your evidence trail is strong. You challenged unsupported claims, verified physical evidence, investigated contradictions and considered independent corroboration. The original accusation should not have been accepted without sufficient and appropriate evidence.";
+else if(stars>=4)conclusion="Most major warning signs were identified. The royal court should have delayed its conclusion until the evidence was independently verified and properly documented.";
+else if(stars>=2)conclusion="Several warning signs were present, including evidence gaps and documentation concerns. The accusation required further investigation before a final conclusion.";
+else conclusion="The evidence was not strong enough to support the original accusation. Professional skepticism and additional evidence were required.";
+document.getElementById('rank').textContent=rank;document.getElementById('endText').textContent=text;document.getElementById('conclusion').textContent=conclusion;document.getElementById('board').innerHTML=clues.length?clues.map(c=>`<span class="evi">🔎 ${c.topic}</span>`).join(''):'<span class="evi">No clues collected</span>';go('end')}
+function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1400)}
+</script></body></html>
